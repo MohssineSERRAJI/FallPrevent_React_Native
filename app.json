@@ -1,0 +1,12 @@
+{
+  "name": "old_people",
+  "displayName": "old_people",
+  "expo": {
+    "name": "old_people",
+    "slug": "old_people",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
