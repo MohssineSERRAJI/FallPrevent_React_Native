@@ -14,8 +14,15 @@ export function useAuth() {
           return {
             ...state,
             loading: false,
+            loadingNotis: false,
             user: {...action.payload},
           };
+        case 'SET_NOTIFICATIONS':
+        return {
+          ...state,
+          loadingNotis: true,
+          notifications: {...action.payload},
+        };
         case 'REMOVE_USER':
           return {
             ...state,
@@ -23,7 +30,7 @@ export function useAuth() {
           };
         case 'SET_LOADING':
           return {
-            ...state,
+            ...state, 
             loading: action.payload,
           };
         default:
@@ -44,15 +51,17 @@ export function useAuth() {
         });
         const user = {
           email: data.email,
+          name : data.name,
         };
+        const notifications = {
+          list : data.notifications
+        }
+        dispatch(createAction('SET_NOTIFICATIONS', notifications));
         await AsyncStorage.setItem('user', JSON.stringify(user));
         dispatch(createAction('SET_USER', user));
       },
       logout: async () => {
-        console.log(AsyncStorage.getItem("user"))
-        AsyncStorage.getItem('user').then(user => {
-        });
-        await AsyncStorage.removeItem('user');
+        await AsyncStorage.removeItem('user'); 
         dispatch(createAction('REMOVE_USER'));
       },
       register: async (firstname, lastname, phone, email, password) => {
@@ -65,18 +74,35 @@ export function useAuth() {
           password,
         });
       },
+      notifications: async (email) => {
+         // on considere que email est le token
+        const {data} = await axios.post(`${BASE_URL}/notifications`, {
+          email,
+        });
+        const ndata = {
+          list: data.notifications,
+        };
+        console.log(email);
+        dispatch(createAction('SET_NOTIFICATIONS', ndata));
+      },
     }),
     [],
   );
   React.useEffect(() => {
-    sleep(2000).then(() => {
-      AsyncStorage.getItem('user').then(user => {
-        if (user) {
-          dispatch(createAction('SET_USER', user));
-        } else {
-          dispatch(createAction('SET_LOADING', false));
-        }
-      });
+    sleep(100).then(() => {
+      try {
+        AsyncStorage.getItem('user').then((user) => {
+            let resUser = JSON.parse(user)
+            if (resUser) {
+              dispatch(createAction('SET_USER', resUser));
+            } else {
+              dispatch(createAction('SET_LOADING', false)); 
+            }
+            console.log("done") 
+        });
+        
+    } catch (error) {
+    }
     });
   }, []);
   return {auth, state};

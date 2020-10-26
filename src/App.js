@@ -16,11 +16,13 @@ export default function() {
   const {auth, state} = useAuth();
 
   function renderScreens() {
-    
+    if (state.loading) {
+      return <RootStack.Screen name={'Splash'} component={SplashScreen} />;
+    }
     return state.user ? (
       <RootStack.Screen name={'MainStack'}>
         {() => (
-          <UserContext.Provider value={state.user}>
+          <UserContext.Provider value={state}>
             <MainStackNavigator />
           </UserContext.Provider>
         )}
