@@ -1,6 +1,6 @@
 # Patients
 
-#### A implementation 0f [React Native Framework](https://reactnative.dev/).
+#### This code is an implementation 0f [React Native Framework](https://reactnative.dev/) to create a mobile app.
 
 ## Local Setup:
  1. Ensure that Node.js, yarn are installed.
